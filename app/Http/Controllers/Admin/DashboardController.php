@@ -64,12 +64,16 @@ class DashboardController extends Controller
             ->first();
 
         if (now()->greaterThanOrEqualTo($event->start_date)) {
-            return redirect()->back()->with('error', 'Você não pode cancelar a inscrição após o início do evento.');
+            return redirect()
+                ->back()
+                ->with('error', 'Você não pode cancelar a inscrição após o início do evento.');
         }
 
         // Se não encontrar a inscrição, pode redirecionar com uma mensagem de erro
         if (!$registration) {
-            return redirect()->back()->with('error', 'Você não está inscrito neste evento.');
+            return redirect()
+                ->back()
+                ->with('error', 'Você não está inscrito neste evento.');
         }
 
         $registration->delete();
@@ -81,24 +85,8 @@ class DashboardController extends Controller
         $filters = $request->only('category', 'start_date', 'end_date');
         $categories = $this->category->latest()->get();
 
-        $events = $this->event->with(['category', 'registrations' => function ($query) {
-            $query->where('user_id', auth()->id());
-        }])
-            ->withCount('registrations')
-            ->where(function ($query) use ($filters) {
+        $events = $this->event->filterEventsDashboard($filters);
 
-                if ($filters['category']) {
-                    $query->where('category_id', $filters['category']);
-                }
-
-                if (isset($filters['start_date']) && !empty($filters['start_date']) && isset($filters['end_date']) && !empty($filters['end_date'])) {
-                    $query->whereDate('start_date', '>=', $filters['start_date'])
-                        ->whereDate('start_date', '<=', $filters['end_date']);
-                } elseif (isset($filters['start_date']) && !empty($filters['start_date'])) {
-                    $query->whereDate('start_date', '=', $filters['start_date']);
-                }
-            })->latest()->paginate();
-
-        return view('admin.pages.home.home', compact('events', 'categories', 'filters'));
+        return view('admin.pages.home.home', compact('events', 'categories', 'filters'));        
     }
 }

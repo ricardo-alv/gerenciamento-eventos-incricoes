@@ -21,7 +21,7 @@ class Event extends Model
         return $this->hasMany(Registration::class);
     }
 
-    public function searchEvent($filter = null)
+    public function searchEvents($filter = null)
     {
         return  $this->where(function ($query) use ($filter) {
             if ($filter) {
@@ -30,5 +30,25 @@ class Event extends Model
             }
         })->latest()
             ->paginate();
+    }
+
+    public function filterEventsDashboard(array $filters)
+    {
+        return $this->with(['category', 'registrations' => function ($query) {
+            $query->where('user_id', auth()->id());
+        }])
+        ->withCount('registrations')
+        ->where(function ($query) use ($filters) {
+            if (!empty($filters['category'])) {
+                $query->where('category_id', $filters['category']);
+            }
+
+            if (!empty($filters['start_date']) && !empty($filters['end_date'])) {
+                $query->whereDate('start_date', '>=', $filters['start_date'])
+                      ->whereDate('start_date', '<=', $filters['end_date']);
+            } elseif (!empty($filters['start_date'])) {
+                $query->whereDate('start_date', '=', $filters['start_date']);
+            }
+        })->latest()->paginate();
     }
 }

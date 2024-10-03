@@ -68,6 +68,17 @@ class EventController extends Controller
                 ->with('error', 'Você não tem permissão para atualizar este evento.');
         }
 
+        // Obtém o número atual de inscrições
+        $currentRegistrationsCount = $event->registrations()->count();
+        // Obtém a nova capacidade proposta
+        $newCapacity = $request['capacity'];
+        // Verifica se a capacidade está sendo diminuída
+        if ($newCapacity < $currentRegistrationsCount) {
+            return redirect()
+                ->back()
+                ->with('error', 'A nova capacidade não pode ser menor que a quantidade de inscritos (' . $currentRegistrationsCount . ').');
+        }
+
         $event->update($request->all());
 
         return redirect()->route('events.index')
@@ -94,7 +105,7 @@ class EventController extends Controller
     public function search(Request $request)
     {
         $filters = $request->only('filter');
-        $events =  $this->event->searchEvent($filters['filter'] ?? '');
+        $events =  $this->event->searchEvents($filters['filter'] ?? '');
 
         return view('admin.pages.events.index', compact('events', 'filters'));
     }
