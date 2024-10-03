@@ -4,65 +4,51 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreUpdateEvent;
+use Illuminate\Support\Facades\Gate;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Models\Event;
 
 class EventController extends Controller
 {
-    private $repository, $category;
+    public function __construct(
+        private Event $event,
+        private Category $category
 
-    public function __construct(Event $event, Category $category)
-    {
-        $this->repository = $event;
-        $this->category = $category;
+    ) {
+        $this->middleware(['can:is-admin']);
     }
 
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        $events = $this->repository->latest()->paginate();
+        $events = $this->event->latest()->paginate();
         return view('admin.pages.events.index', compact('events',));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         $categories = $this->category->latest()->get();
         return view('admin.pages.events.create', compact('categories'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StoreUpdateEvent $request)
     {
-        $this->repository->create($request->all());
+        $this->event->create($request->all());
         return redirect()->route('events.index')
-            ->with('message', 'Criado com sucesso.');
+            ->with('success', 'Criado com sucesso.');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $url)
     {
-        if (!$event = $this->repository->where('url', $url)->first()) {
+        if (!$event = $this->event->where('url', $url)->first()) {
             return redirect()->back();
         }
         return view('admin.pages.events.show', compact('event'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(string $url)
     {
-        if (!$event = $this->repository->where('url', $url)->first()) {
+        if (!$event = $this->event->where('url', $url)->first()) {
             return redirect()->route('events.index');
         }
 
@@ -71,40 +57,45 @@ class EventController extends Controller
         return view('admin.pages.events.edit', compact('event', 'categories'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(StoreUpdateEvent $request, string $id)
     {
-        if (!$event = $this->repository->find($id)) {
+        if (!$event = $this->event->find($id)) {
             return redirect()->back();
+        }
+
+        if ($event->user_id !== auth()->id() && !auth()->user()->isAdmin()) {
+            return redirect()->route('events.index')
+                ->with('error', 'Você não tem permissão para atualizar este evento.');
         }
 
         $event->update($request->all());
 
         return redirect()->route('events.index')
-            ->with('message', 'Atualizado com sucesso.');
+            ->with('success', 'Atualizado com sucesso.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
-        if (!$category = $this->repository->find($id)) {
+        if (!$event = $this->event->find($id)) {
             return redirect()->back();
         }
 
-        $category->delete();
+        if ($event->user_id !== auth()->id() && !auth()->user()->isAdmin()) {
+            return redirect()->route('events.index')
+                ->with('error', 'Você não tem permissão para excluir este evento.');
+        }
+
+        $event->delete();
 
         return redirect()->route('events.index')
-            ->with('message', 'Excluído com sucesso.');
+            ->with('success', 'Excluído com sucesso.');
     }
 
     public function search(Request $request)
-    {      
-         $filters = $request->only('filter');
-         $events =  $this->repository->searchEvent($filters['filter'] ?? '');
-         return view('admin.pages.events.index', compact('events', 'filters'));
+    {
+        $filters = $request->only('filter');
+        $events =  $this->event->searchEvent($filters['filter'] ?? '');
+
+        return view('admin.pages.events.index', compact('events', 'filters'));
     }
 }

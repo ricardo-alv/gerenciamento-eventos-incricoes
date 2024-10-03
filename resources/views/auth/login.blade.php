@@ -4,8 +4,9 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Login') }}</div>
+            <h5 class="text-success"> Acesse sua conta para garantir sua participação nos próximos eventos!</h5>
+            <div class="card">             
+                <div class="card-header">Fazer Login</div>
 
                 <div class="card-body">
                     <form method="POST" action="{{ route('login') }}">
@@ -45,11 +46,9 @@
                                     Login
                                 </button>
 
-                                @if (Route::has('password.request'))
-                                    <a class="btn btn-link" href="{{ route('password.request') }}">
-                                        Esqueceu sua senha ?
-                                    </a>
-                                @endif
+                                    <a class="btn btn-link" href="{{ route('register') }}">
+                                        Ainda não tem um cadastro? Crie um agora!
+                                    </a>                              
                             </div>
                         </div>
                     </form>

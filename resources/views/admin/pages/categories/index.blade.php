@@ -7,19 +7,21 @@
             <div class="col-md-12">
                 <h1>Categorias <a href="{{ route('categories.create') }}" class="btn btn-success"><i
                             class="fas fa-plus-square mr-2"></i>NOVA</a></h1>
-                @include('admin.includes.alerts')                  
-                <div class="card">       
+                <div class="mt-3">
+                    <x-alert />
+                </div>
+                <div class="card">
                     <div class="card-body">
                         <div class="row">
                             <form action="{{ route('categories.search') }}" method="POST" class="form form-inline">
                                 @csrf
                                 <div class="col-md-6 d-flex">
-                                    <input type="text" name="filter" placeholder="Pesquisar nome, descrição..."  class="form-control me-2"
-                                        value="{{ $filters['filter'] ?? '' }}">
+                                    <input type="text" name="filter" placeholder="Pesquisar nome, descrição..."
+                                        class="form-control me-2" value="{{ $filters['filter'] ?? '' }}">
                                     <button type="submit" class="btn btn-dark">Filtrar</button>
-                                </div>                              
+                                </div>
                             </form>
-                        </div>           
+                        </div>
 
                         <table class="table table-condensed mt-3">
                             <thead>

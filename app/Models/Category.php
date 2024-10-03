@@ -11,6 +11,11 @@ class Category extends Model
 
     protected $fillable = ['name', 'url', 'description'];
 
+    public function events()
+    {
+        return $this->hasMany(Event::class); 
+    }
+
     public function searchCategory($filter = null)
     {
         return  $this->where(function ($query) use ($filter) {
@@ -18,7 +23,7 @@ class Category extends Model
                 $query->where('name', 'LIKE',  "%$filter%");
                 $query->orWhere('description', $filter);
             }
-        })
+        })->latest()
             ->paginate();
     }
 }

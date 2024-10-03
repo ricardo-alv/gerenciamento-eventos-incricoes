@@ -1,4 +1,6 @@
-@include('admin.includes.alerts')
+<div class="mt-3">
+    <x-alert />
+</div>
 
 <div class="form-group">
     <label for="name">Nome:</label>

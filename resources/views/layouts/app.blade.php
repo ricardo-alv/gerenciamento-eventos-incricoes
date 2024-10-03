@@ -18,8 +18,11 @@
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
-                <a class="navbar-brand mt-2" href="{{ route('dashboard') }}">
-                   <h5 class="text-primary">Gerenciamento de Eventos e Inscrições</h5>
+                <a class="navbar-brand mt-2" href="{{ route('dashboard.index') }}">
+                   <h5 >
+                     <span class="text-primary">Gerenciamento de Eventos e Inscrições</span> 
+                     <span class="text-secondary">|</span>
+                   </h5>
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>
@@ -27,17 +30,27 @@
 
                 <div class="d-flex justify-content-between align-items-center collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
-                    <ul class="navbar-nav mr-auto">
+                    <ul class="navbar-nav mr-auto">                     
                         @auth
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('dashboard.index') }}">Dashboard</a>
+                        </li>
+                        @can('is-admin')
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('categories.index') }}">Categorias</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('events.index') }}">Eventos</a>
                         </li>
+                        @endcan
+                        @can('is-super-admin')
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('users.index') }}">Usuários</a>
+                        </li>
+                        @endcan                    
                         @endauth
                     </ul>
-
+                   
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ml-auto">
                         <!-- Authentication Links -->
@@ -51,27 +64,15 @@
                                 </li>
                             @endif
                         @else
-                            <li class="nav-item dropdown ml-auto"> 
+                            <li class="nav-item dropdown ml-auto">                                
 
                                 <a class="dropdown-item" href="{{ route('logout') }}"
                                         onclick="event.preventDefault();
                                                  document.getElementById('logout-form').submit();">
                                        Sair
                                     </a>
-                                
-                                <!-- Adicione 'ml-auto' aqui -->
-                                {{-- <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
-                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    {{ Auth::user()->name }} <span class="caret"></span>
-                                </a> --}}
-
-                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                    {{-- <a class="dropdown-item" href="{{ route('logout') }}"
-                                        onclick="event.preventDefault();
-                                                 document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
-                                    </a> --}}
-
+                               
+                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">                                
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST"
                                         style="display: none;">
                                         @csrf

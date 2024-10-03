@@ -9,7 +9,10 @@
             <h5>Detalhes do Evento {{ $event->name }}</h5>
             <div class="card">             
                 <div class="card-body">
-                    @include('admin.includes.alerts')
+                    
+                    <div class="mt-3">
+                        <x-alert />
+                    </div>
                     
                     <ul class="list-group list-group-flush">
                         <li class="list-group-item"> <strong>Nome:</strong> {{ $event->name }}</li>

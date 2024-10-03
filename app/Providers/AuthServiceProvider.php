@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
-// use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Gate;
+
+use App\Models\User;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
@@ -21,6 +23,24 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        $this->registerPolicies();
+
+        Gate::define('is-admin', function (User $user) {
+            return $user->roles()->where('name', 'admin')->exists();
+        });
+
+        Gate::define('is-participante', function (User $user) {
+            return $user->roles()->where('name', 'participante')->exists();
+        });
+
+        Gate::define('is-super-admin', function (User $user) {
+            return in_array($user->email, config('acl.super_admins'));
+        });
+
+        Gate::before(function (User $user) {
+            if ($user->isAdmin()) {
+                return true;
+            }
+        });
     }
 }
