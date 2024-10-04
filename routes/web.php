@@ -10,10 +10,6 @@ use App\Http\Controllers\Admin\{
 
 use Illuminate\Support\Facades\Route;
 
-// Route::get('/', function () {
-//     return redirect()->route('login');
-// });
-
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard.index');
 Route::any('dashboard/search', [DashboardController::class, 'search'])->name('dashboard.search');
 
