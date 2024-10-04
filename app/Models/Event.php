@@ -34,7 +34,6 @@ class Event extends Model
 
     public function searchEventsById($filter = null)
     {
-
         return $this->whereHas('registrations', function ($query) use ($filter) {
 
             $query->where('user_id', auth()->id());
