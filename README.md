@@ -76,8 +76,17 @@ Executar o comando para executar as queues (envio de email):
 ```sh
 php artisan queue:work
 ```
-Para realizar os testes criar um banco de dados exclusivo para teste se necessáriot:
+Login e senha do Super Admin:
+```sh
+ email:super.admin@com.br
+ password: 12345678
+```
+Para realizar os testes criar um banco de dados exclusivo para teste se necessário:
 
+Modificar a variável do env ou criar .env.testing:
+```sh
+APP_ENV=testing
+```
 Para executar todos os test:
 ```sh
 php artisan test
@@ -91,8 +100,3 @@ Executar o comando se necessário antes de rodar os tests:
 composer dumpautoload
 ```
 
-Login e senha do Super Admin:
-```sh
- email:super.admin@com.br
- password: 12345678
-```
