@@ -2,8 +2,8 @@
 
 namespace App\Providers;
 
-use App\Models\{Category, Event};
-use App\Observers\{CategoryObserver, EventObserver};
+use App\Models\{Category, Event, Registration};
+use App\Observers\{CategoryObserver, EventObserver, RegistrationObserver};
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Pagination\Paginator;
 
@@ -25,5 +25,6 @@ class AppServiceProvider extends ServiceProvider
         Paginator::useBootstrap();
         Category::observe(CategoryObserver::class);
         Event::observe(EventObserver::class);
+        Registration::observe(RegistrationObserver::class);
     }
 }

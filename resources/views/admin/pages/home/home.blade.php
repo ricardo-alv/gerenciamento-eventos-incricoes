@@ -6,7 +6,9 @@
 
             <div class="d-flex justify-content-between">
                 <h5 class="card-title text-secondary">Eventos</h5>
+                @auth
                 <h6 class="card-title text-success">Olá {{ Auth::user()->name }}!</h6>
+                @endauth
             </div>
 
             <div class="mt-3">
@@ -46,8 +48,8 @@
                         <div class="card-body">
                             <h5 class="card-title mb-4">{{ $event->name }}</h5>
                             <p class="card-text">
-                                Início: {{ \Carbon\Carbon::parse($event->start_date)->format('d/m/Y H:i') }} <br>
-                                Término: {{ \Carbon\Carbon::parse($event->end_date)->format('d/m/Y H:i') }}
+                                Início: {{ formatDateTimeBr($event->start_date) }} <br>
+                                Término: {{ formatDateTimeBr($event->end_date) }}
                             </p>
                             <p class="card-text text-primary">
                                 Tota de Vagas: {{ $event->capacity }} <br>

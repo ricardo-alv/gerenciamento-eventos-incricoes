@@ -17,7 +17,7 @@ class DashboardController extends Controller
     ) {}
 
     public function index()
-    {
+    {          
         $categories = $this->category->latest()->get();
 
         $events = $this->event->with(['category', 'registrations' => function ($query) {
@@ -76,7 +76,8 @@ class DashboardController extends Controller
                 ->with('error', 'Você não está inscrito neste evento.');
         }
 
-        $registration->delete();
+        $registration->delete();    
+
         return redirect()->back()->with('success', 'Inscrição cancelada com sucesso.');
     }
 

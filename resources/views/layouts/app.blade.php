@@ -35,6 +35,11 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('dashboard.index') }}">Dashboard</a>
                         </li>
+                        @can('is-participante')
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('registrations.index') }}">Minhas Incrições</a>
+                        </li>
+                        @endcan
                         @can('is-admin')
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('categories.index') }}">Categorias</a>

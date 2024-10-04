@@ -32,23 +32,41 @@ class Event extends Model
             ->paginate();
     }
 
+    public function searchEventsById($filter = null)
+    {
+
+        return $this->whereHas('registrations', function ($query) use ($filter) {
+
+            $query->where('user_id', auth()->id());
+
+            if ($filter) {
+                $query->where('name', 'LIKE',  "%$filter%");
+                $query->orWhere('description', $filter);
+            }
+        })
+            ->withCount('registrations')
+            ->with('category')
+            ->latest()
+            ->paginate();
+    }
+
     public function filterEventsDashboard(array $filters)
     {
         return $this->with(['category', 'registrations' => function ($query) {
             $query->where('user_id', auth()->id());
         }])
-        ->withCount('registrations')
-        ->where(function ($query) use ($filters) {
-            if (!empty($filters['category'])) {
-                $query->where('category_id', $filters['category']);
-            }
+            ->withCount('registrations')
+            ->where(function ($query) use ($filters) {
+                if (!empty($filters['category'])) {
+                    $query->where('category_id', $filters['category']);
+                }
 
-            if (!empty($filters['start_date']) && !empty($filters['end_date'])) {
-                $query->whereDate('start_date', '>=', $filters['start_date'])
-                      ->whereDate('start_date', '<=', $filters['end_date']);
-            } elseif (!empty($filters['start_date'])) {
-                $query->whereDate('start_date', '=', $filters['start_date']);
-            }
-        })->latest()->paginate();
+                if (!empty($filters['start_date']) && !empty($filters['end_date'])) {
+                    $query->whereDate('start_date', '>=', $filters['start_date'])
+                        ->whereDate('start_date', '<=', $filters['end_date']);
+                } elseif (!empty($filters['start_date'])) {
+                    $query->whereDate('start_date', '=', $filters['start_date']);
+                }
+            })->latest()->paginate();
     }
 }

@@ -4,7 +4,7 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <h5 class="text-success"> Acesse sua conta para garantir sua participação nos próximos eventos!</h5>
+            <h5 class="text-success"> Acesse sua conta para garantir sua participação nos eventos!</h5>
             <div class="card">             
                 <div class="card-header">Fazer Login</div>
 

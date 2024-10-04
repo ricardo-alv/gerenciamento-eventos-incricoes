@@ -18,7 +18,7 @@ class Registration extends Model
 
     public function event()
     {
-        return $this->belongsTo(Event::class);
+        return $this->belongsTo(Event::class)->with('category');
     }
 
     public function user()
