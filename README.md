@@ -17,7 +17,7 @@ O sistema de Gerenciamento de Eventos e Inscrições permitirá que usuários au
 Clone the repo locally:
 
 ```sh
-https://github.com/ricardo-alv/gerenciamento-eventos-incricoes.git
+git clone https://github.com/ricardo-alv/gerenciamento-eventos-incricoes.git
 cd gerenciamento-eventos-incricoes
 ```
 
@@ -64,7 +64,7 @@ Em seguida rode as migrations
 ```sh
 php artisan migrate
 ```
-Após executar as migrations rode o comando de seed para criar o Super Admin
+Após executar as migrations rode o comando de seed para criar o Super Admin e as Roles
 ```sh
 php artisan db:seed
 ```
@@ -85,6 +85,10 @@ php artisan test
 Para executar um test especifico por nome da classe ou função:
 ```sh
  php artisan test --filter test_name
+```
+Executar o comando se necessário antes de rodar os tests:
+```sh
+composer dumpautoload
 ```
 
 Login e senha do Super Admin:
